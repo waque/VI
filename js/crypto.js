@@ -2,6 +2,8 @@ var market_cap, price, volume;
 var currant_crypto;
 var marketCapChart, volumeChart;
 
+
+
 $.ajax({
   url: "http://coincap.io/history/365day/BTC",
   dataType: 'json',
@@ -11,6 +13,21 @@ $.ajax({
     market_cap = data.market_cap;
     price = data.price;
     volume = data.volume;
+  },
+  error: function (xhr, ajaxOptions, thrownError) {
+
+        $.ajax({
+          url: "/data/history/history" + crypto + ".txt",
+          dataType: 'json',
+          async: false,
+          success: function(data) {
+            //console.log(data);
+            market_cap = data.market_cap;
+            price = data.price;
+            volume = data.volume;
+          }
+        });
+
   }
 });
 
@@ -25,7 +42,7 @@ function changeCrypto(crypto){
 
 function getData(crypto){
   $.ajax({
-    url: "http://coincap.io/history/365day/" + crypto,
+    url: "http://coincap.io/history/365day/BTC",
     dataType: 'json',
     async: false,
     success: function(data) {
@@ -33,6 +50,23 @@ function getData(crypto){
       market_cap = data.market_cap;
       price = data.price;
       volume = data.volume;
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+          alert(xhr.status);
+          alert(thrownError);
+
+          $.ajax({
+            url: "/data/history/history" + crypto + ".txt",
+            dataType: 'json',
+            async: false,
+            success: function(data) {
+              //console.log(data);
+              market_cap = data.market_cap;
+              price = data.price;
+              volume = data.volume;
+            }
+          });
+
     }
   });
 }
