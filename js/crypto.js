@@ -14,10 +14,10 @@ $.ajax({
     price = data.price;
     volume = data.volume;
   },
-  error: function (xhr, ajaxOptions, thrownError) {
+  error: function () {
 
         $.ajax({
-          url: "/data/history/history" + crypto + ".txt",
+          url: "data/history/historyBTC.txt",
           dataType: 'json',
           async: false,
           success: function(data) {
@@ -30,6 +30,25 @@ $.ajax({
 
   }
 });
+
+
+
+$.ajax({
+  url: "http://coincap.io/front",
+  dataType: 'json',
+  async: false,
+  success: function(data) {
+    var json = {}
+    for (i = 0; i < 16; i++) {
+      json[data[i].long] = data[i].supply;
+    }
+    console.log(JSON.stringify(json));
+
+
+  }
+});
+
+
 
 
 
@@ -56,7 +75,7 @@ function getData(crypto){
           alert(thrownError);
 
           $.ajax({
-            url: "/data/history/history" + crypto + ".txt",
+            url: "data/history/history" + crypto + ".txt",
             dataType: 'json',
             async: false,
             success: function(data) {
