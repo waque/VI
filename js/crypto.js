@@ -2,8 +2,6 @@ var market_cap, price, volume;
 var currant_crypto;
 var marketCapChart, volumeChart;
 
-
-
 $.ajax({
   url: "http://coincap.io/history/365day/BTC",
   dataType: 'json',
@@ -17,7 +15,7 @@ $.ajax({
   error: function () {
 
         $.ajax({
-          url: "data/history/historyBTC.txt",
+          url: "data/history/historyBTC.json",
           dataType: 'json',
           async: false,
           success: function(data) {
@@ -33,35 +31,33 @@ $.ajax({
 
 
 
-$.ajax({
-  url: "http://coincap.io/front",
-  dataType: 'json',
-  async: false,
-  success: function(data) {
-    var json = {}
-    for (i = 0; i < 16; i++) {
-      json[data[i].long] = data[i].supply;
-    }
-    console.log(JSON.stringify(json));
-
-
+function onChangeCrypto(crypto){
+  if($('#checkbox'+crypto).is(":checked")){
+    addCoin(crypto);
+    console.log('add'+crypto);
   }
-});
-
-
-
-
-
-function changeCrypto(crypto){
-  getData(crypto);
-  volumeChart.series[0].setData(volume);
-  marketCapChart.series[0].setData(market_cap);
-  marketCapChart.series[1].setData(price);
+  else{
+    removeCoin(crypto);
+    console.log('remove'+crypto);
+  }
 }
+
+function addCoin(crypto){
+  getData(crypto);
+  priceChart.addSeries({
+                name: crypto,
+                data: price
+            });
+}
+
+function removeCoin(crypto){
+  return null;
+}
+
 
 function getData(crypto){
   $.ajax({
-    url: "http://coincap.io/history/365day/BTC",
+    url: "http://coincap.io/history/365day/"+crypto,
     dataType: 'json',
     async: false,
     success: function(data) {
@@ -75,7 +71,7 @@ function getData(crypto){
           alert(thrownError);
 
           $.ajax({
-            url: "data/history/history" + crypto + ".txt",
+            url: "data/history/history" + crypto + ".json",
             dataType: 'json',
             async: false,
             success: function(data) {
@@ -90,96 +86,25 @@ function getData(crypto){
   });
 }
 
-
 $(function () {
     // Create the chart
-    marketCapChart = Highcharts.stockChart('chart1', {
-
-
-        rangeSelector: {
-            selected: 2
-        },
-
-        title: {
-            text: 'Market Capital'
-        },
-
-        yAxis: [{ // Primary yAxis
-        labels: {
-            format: '{market_cap}',
-            style: {
-                color: Highcharts.getOptions().colors[2]
-            }
-        },
-        title: {
-            text: 'market_cap',
-            style: {
-                color: Highcharts.getOptions().colors[2]
-            }
-        },
-        opposite: false
-
-        }, { // Secondary yAxis
-            gridLineWidth: 0,
-            title: {
-                text: 'price',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            },
-            labels: {
-                format: '{value} $',
-                min: 0,
-                max: 8000,
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            }
-
-        }],
-
-        plotOptions: {
-            series: {
-                compare: 'percent',
-                showInNavigator: true
-            }
-        },
-
-        series: [{
-            name: 'market_cap',
-            data: market_cap,
-            tooltip: {
-                valueDecimals: 2
-            }
-        },{
-          name: 'price',
-          data: price,
-          tooltip: {
-              valueDecimals: 2
-          }
-        }]
-    });
-});
-
-$(function () {
-    // Create the chart
-    volumeChart = Highcharts.stockChart('chart2', {
-
+    priceChart = Highcharts.stockChart('chart1', {
 
         rangeSelector: {
             selected: 1
         },
 
         title: {
-            text: 'volume  enchanged last 24h'
+            text: 'Price'
         },
 
         series: [{
-            name: 'volume enchanged last 24h',
-            data: volume,
-            tooltip: {
-                valueDecimals: 2
-            }
+
+          name: 'btc',
+          data: price,
+          tooltip: {
+              valueDecimals: 2
+          }
         }]
     });
 });
