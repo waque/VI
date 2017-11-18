@@ -129,14 +129,20 @@
     <label class="checkbox-inline"><input type="checkbox" onchange="onChangeCrypto('QTUM')" id="checkboxAQTUM" value="">QTUM</label>
 
 
-
+    <div id="progressbar" class="text-center">
+      <div class="progress center-block progress-bar-animated" style="width:200px;"> <!-- set to certain width -->
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"> Loading...</div>
+      </div>
+    </div>
 
     <div class="container">
       <div class="row">
           <div class="col-6" >
               <div id="chart1"> </div>
           </div>
-
+          <div class="col-6" >
+              <div id="heatmapchart"> </div>
+          </div>
       </div>
     </div>
 
